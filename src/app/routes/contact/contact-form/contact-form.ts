@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { DelonFormModule, SFComponent, SFSchema } from '@delon/form';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { Contact } from '../model/contact.model';
 import { ContactService } from '../service/contact.service';
@@ -11,78 +14,78 @@ import { ContactService } from '../service/contact.service';
 @Component({
   selector: 'app-contact-form',
   standalone: true,
-  imports: [CommonModule, DelonFormModule, NzButtonModule, NzModalModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzSelectModule,
+    NzButtonModule,
+    NzModalModule,
+  ],
   templateUrl: './contact-form.html',
   styleUrls: ['./contact-form.less'],
 })
-export class ContactFormComponent implements AfterViewInit {
+export class ContactFormComponent implements OnInit {
   @Input() contact?: Contact;
-  @ViewChild('sf', { static: false })
-  sf!: SFComponent;
 
-  schema: SFSchema = {
-    properties: {
-      fullName: {
-        type: 'string',
-        title: 'Full Name',
-      },
-      mobile: {
-        type: 'string',
-        title: 'Mobile',
-      },
-      email: {
-        type: 'string',
-        title: 'Email',
-      },
-      contactType: {
-        type: 'string',
-        title: 'Contact Type',
-        enum: [
-          { label: 'Customer', value: 'Customer' },
-          { label: 'Supplier', value: 'Supplier' },
-          { label: 'Employee', value: 'Employee' },
-        ],
-      },
-      status: {
-        type: 'string',
-        title: 'Status',
-        default: 'Active',
-        enum: [
-          { label: 'Active', value: 'Active' },
-          { label: 'Inactive', value: 'Inactive' },
-        ],
-      },
-    },
-    required: ['fullName', 'mobile', 'contactType', 'status'],
-  };
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly modalRef = inject(NzModalRef);
+  private readonly contactService = inject(ContactService);
+  private readonly message = inject(NzMessageService);
 
-  constructor(
-    private modalRef: NzModalRef,
-    private contactService: ContactService,
-    private message: NzMessageService,
-  ) {}
+  contactForm = this.fb.group({
+    fullName: ['', Validators.required],
+    mobile: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    email: ['', Validators.email],
+    contactType: this.fb.control<Contact['contactType']>('Customer', {
+      validators: Validators.required,
+    }),
+    status: this.fb.control<Contact['status']>('Active', {
+      validators: Validators.required,
+    }),
+  });
 
-  cancel(): void {
-    this.modalRef.destroy();
+  ngOnInit(): void {
+    if (this.contact) {
+      this.contactForm.patchValue({
+        fullName: this.contact.fullName,
+        mobile: this.contact.mobile,
+        email: this.contact.email,
+        contactType: this.contact.contactType,
+        status: this.contact.status,
+      });
+    }
   }
 
   save(): void {
-    if (!this.sf.valid) {
-      this.message.warning('Please fill all required fields');
+    if (this.contactForm.invalid) {
+      this.contactForm.markAllAsTouched();
       return;
     }
 
-    const value = this.sf.value as Omit<Contact, 'id' | 'contactCode' | 'createdDate'>;
+    const value = this.contactForm.getRawValue();
 
     if (this.contact) {
-      this.contactService.updateContact({
+      const updatedContact: Contact = {
         ...this.contact,
-        ...value,
-      });
+        fullName: value.fullName,
+        mobile: value.mobile,
+        email: value.email,
+        contactType: value.contactType,
+        status: value.status,
+      };
 
+      this.contactService.updateContact(updatedContact);
       this.message.success('Contact updated successfully');
     } else {
-      this.contactService.addContact(value);
+      this.contactService.addContact({
+        fullName: value.fullName,
+        mobile: value.mobile,
+        email: value.email,
+        contactType: value.contactType,
+        status: value.status,
+      });
 
       this.message.success('Contact added successfully');
     }
@@ -90,15 +93,7 @@ export class ContactFormComponent implements AfterViewInit {
     this.modalRef.close(true);
   }
 
-  ngAfterViewInit(): void {
-    if (!this.contact) return;
-
-    setTimeout(() => {
-      this.sf.rootProperty?.getProperty('/fullName')?.setValue(this.contact!.fullName, false);
-      this.sf.rootProperty?.getProperty('/mobile')?.setValue(this.contact!.mobile, false);
-      this.sf.rootProperty?.getProperty('/email')?.setValue(this.contact!.email, false);
-      this.sf.rootProperty?.getProperty('/contactType')?.setValue(this.contact!.contactType, false);
-      this.sf.rootProperty?.getProperty('/status')?.setValue(this.contact!.status, false);
-    });
+  cancel(): void {
+    this.modalRef.destroy();
   }
 }

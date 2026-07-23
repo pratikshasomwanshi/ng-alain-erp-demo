@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { STColumn, STModule } from '@delon/abc/st';
 import { ModalHelper } from '@delon/theme';
@@ -21,9 +21,7 @@ import { ContactService } from '../service/contact.service';
   imports: [
     CommonModule,
     FormsModule,
-
     STModule,
-
     NzInputModule,
     NzSelectModule,
     NzButtonModule,
@@ -36,6 +34,10 @@ import { ContactService } from '../service/contact.service';
   styleUrls: ['./contact-list.less'],
 })
 export class ContactListComponent implements OnInit {
+  private readonly contactService = inject(ContactService);
+  private readonly modal = inject(ModalHelper);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   searchName = '';
   selectedType = '';
   selectedStatus = '';
@@ -77,12 +79,6 @@ export class ContactListComponent implements OnInit {
     },
   ];
 
-  constructor(
-    private contactService: ContactService,
-    private modal: ModalHelper,
-    private cdr: ChangeDetectorRef,
-  ) {}
-
   ngOnInit(): void {
     this.loadContacts();
   }
@@ -106,35 +102,30 @@ export class ContactListComponent implements OnInit {
   }
 
   addContact(): void {
-    this.modal.create(ContactFormComponent, {}, { size: 'lg' }).subscribe(() => {
-      this.contacts = [...this.contactService.getContacts()];
-      this.filteredContacts = [...this.contacts];
-
-      this.cdr.detectChanges();
+    this.modal.create(ContactFormComponent, {}, { size: 'lg' }).subscribe((result) => {
+      if (result) {
+        this.loadContacts();
+        this.applyFilter();
+        this.cdr.detectChanges();
+      }
     });
   }
+
   edit(contact: Contact): void {
     this.modal.create(ContactFormComponent, { contact }, { size: 'lg' }).subscribe((result) => {
       if (result) {
         this.loadContacts();
+        this.applyFilter();
+        this.cdr.detectChanges();
       }
     });
   }
 
   deleteContact(id: number): void {
-    const confirmed = confirm('Are you sure you want to delete this contact?');
-
-    if (!confirmed) {
-      return;
-    }
-
     this.contactService.deleteContact(id);
-
     this.loadContacts();
-
     this.applyFilter();
-
-    console.log('Deleted Contact', id);
+    this.cdr.detectChanges();
   }
 
   refresh(): void {
