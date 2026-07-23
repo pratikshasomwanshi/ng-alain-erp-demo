@@ -37,8 +37,10 @@
     "@delon/mock": "^21.3.0",
     "@delon/theme": "^21.3.0",
     "@delon/util": "^21.3.0",
+    "echarts": "^5.6.0",
     "ng-alain": "^21.3.0",
     "ng-zorro-antd": "^21.2.2",
+    "ngx-echarts": "^21.0.0",
     "rxjs": "~7.8.0",
     "screenfull": "^6.0.2",
     "tslib": "^2.3.0"

@@ -1,1 +1,202 @@
-<page-header />
+<div class="dashboard">
+  <!-- Hero Section -->
+  <div class="hero-card">
+    <div class="hero-content">
+      <span class="welcome-tag"> 👋 Good Morning </span>
+
+      <h1>Welcome Back, Admin</h1>
+
+      <p>Manage your contacts, customers and suppliers from one beautiful dashboard.</p>
+
+      <div class="hero-actions">
+        <button nz-button>Add Contact</button>
+
+        <button nz-button>View Reports</button>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <span class="hero-icon">📊</span>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">📇</div>
+
+      <div>
+        <span>Total Contacts</span>
+
+        <h2>1,284</h2>
+
+        <small>+12% this month</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">👥</div>
+
+      <div>
+        <span>Customers</span>
+
+        <h2>864</h2>
+
+        <small>+8% this month</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">🏢</div>
+
+      <div>
+        <span>Suppliers</span>
+
+        <h2>325</h2>
+
+        <small>+5% this month</small>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon purple">💰</div>
+
+      <div>
+        <span>Revenue</span>
+
+        <h2>₹48.6L</h2>
+
+        <small>+18% this month</small>
+      </div>
+    </div>
+  </div>
+  <!-- Analytics -->
+
+  <div class="analytics-grid">
+    <div class="chart-card">
+      <div class="card-header">
+        <div>
+          <h3>Contact Growth</h3>
+          <span>Monthly Overview</span>
+        </div>
+
+        <button nz-button nzType="default">This Year</button>
+      </div>
+
+      <div echarts class="chart" [options]="contactGrowthOption"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="card-header">
+        <h3>Customer Ratio</h3>
+      </div>
+
+      <!-- <g2-pie height="260" [hasLegend]="true" [percent]="72" subTitle="Customers" total="72%" /> -->
+    </div>
+  </div>
+  <!-- Quick Actions & Activity -->
+
+  <div class="bottom-grid">
+    <!-- Quick Actions -->
+
+    <div class="action-card">
+      <div class="section-title">
+        <h3>Quick Actions</h3>
+        <span>Frequently Used</span>
+      </div>
+
+      <div class="action-grid">
+        <div class="action-item">
+          <div class="action-icon blue">+</div>
+          <span>Add Contact</span>
+        </div>
+
+        <div class="action-item">
+          <div class="action-icon green">👤</div>
+          <span>Add Customer</span>
+        </div>
+
+        <div class="action-item">
+          <div class="action-icon orange">🏢</div>
+          <span>Add Supplier</span>
+        </div>
+
+        <div class="action-item">
+          <div class="action-icon purple">📊</div>
+          <span>Reports</span>
+        </div>
+
+        <div class="action-item">
+          <div class="action-icon red">⬇</div>
+          <span>Export</span>
+        </div>
+
+        <div class="action-item">
+          <div class="action-icon cyan">⚙</div>
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+
+    <div class="activity-card">
+      <div class="section-title">
+        <h3>Recent Activity</h3>
+
+        <span>Today</span>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+
+          <div>
+            <strong>Rahul Sharma</strong>
+
+            <p>New Contact Added</p>
+          </div>
+
+          <small>10 min</small>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot green-bg"></span>
+
+          <div>
+            <strong>Priya Patil</strong>
+
+            <p>Customer Updated</p>
+          </div>
+
+          <small>1 hr</small>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot orange-bg"></span>
+
+          <div>
+            <strong>Pooja Kale</strong>
+
+            <p>Supplier Created</p>
+          </div>
+
+          <small>3 hr</small>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot purple-bg"></span>
+
+          <div>
+            <strong>Export</strong>
+
+            <p>Excel Generated</p>
+          </div>
+
+          <small>Yesterday</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
