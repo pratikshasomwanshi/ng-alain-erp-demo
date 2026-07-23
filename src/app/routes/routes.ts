@@ -3,7 +3,7 @@ import { startPageGuard } from '@core';
 import { authSimpleCanActivate, authSimpleCanActivateChild } from '@delon/auth';
 
 import { LayoutBasic } from '../layout';
-import { ContactListComponent } from './contact/contact-list/contact-list';
+// import { ContactListComponent } from './contact/contact-list/contact-list';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
@@ -16,7 +16,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'contact', component: ContactListComponent },
+      // { path: 'contact', component: ContactListComponent },
     ],
   },
   // passport
