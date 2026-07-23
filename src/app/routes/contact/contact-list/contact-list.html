@@ -48,11 +48,7 @@
 
     &nbsp;&nbsp;
 
-    <a
-      nz-popconfirm
-      nzPopconfirmTitle="Delete this contact?"
-      (nzOnConfirm)="deleteContact(item.id)"
-    >
+    <a nz-onconfirm nzonconfirmTitle="Delete this contact?" (nzOnConfirm)="deleteContact(item.id)">
       <span nz-icon nzType="delete"></span>
     </a>
   </ng-template>

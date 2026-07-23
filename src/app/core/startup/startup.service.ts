@@ -106,7 +106,7 @@ export class StartupService {
           {
             text: 'Dashboard',
             link: '/dashboard',
-            icon: { type: 'icon', value: 'appstore' },
+            icon: { type: 'icon', value: 'upstore' },
           },
           {
             text: 'Contact',
