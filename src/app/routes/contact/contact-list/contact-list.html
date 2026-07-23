@@ -1,0 +1,59 @@
+<div class="page-header">
+  <h2>Contact Management</h2>
+</div>
+<div class="toolbar">
+  <input
+    nz-input
+    placeholder="Search Name"
+    [(ngModel)]="searchName"
+    (ngModelChange)="applyFilter()"
+  />
+
+  <nz-select
+    [(ngModel)]="selectedType"
+    (ngModelChange)="applyFilter()"
+    nzPlaceHolder="Contact Type"
+  >
+    <nz-option nzValue="" nzLabel="Type" />
+    <nz-option nzValue="Customer" nzLabel="Customer" />
+    <nz-option nzValue="Supplier" nzLabel="Supplier" />
+    <nz-option nzValue="Employee" nzLabel="Employee" />
+  </nz-select>
+
+  <nz-select [(ngModel)]="selectedStatus" (ngModelChange)="applyFilter()" nzPlaceHolder="Status">
+    <nz-option nzValue="" nzLabel="Status" />
+    <nz-option nzValue="Active" nzLabel="Active" />
+    <nz-option nzValue="Inactive" nzLabel="Inactive" />
+  </nz-select>
+
+  <span class="spacer"></span>
+
+  <button nz-button nzType="primary" (click)="addContact()">
+    <span nz-icon nzType="plus"></span>
+    Add Contact
+  </button>
+</div>
+
+<st [data]="filteredContacts" [columns]="columns">
+  <ng-template st-row="status" let-item>
+    <nz-tag [nzColor]="item.status === 'Active' ? 'green' : 'red'">
+      {{ item.status }}
+    </nz-tag>
+  </ng-template>
+
+  <ng-template st-row="action" let-item>
+    <a nz-tooltip nzTooltipTitle="Edit" (click)="edit(item)">
+      <span nz-icon nzType="edit"></span>
+    </a>
+
+    &nbsp;&nbsp;
+
+    <a
+      nz-popconfirm
+      nzPopconfirmTitle="Delete this contact?"
+      (nzOnConfirm)="deleteContact(item.id)"
+    >
+      <span nz-icon nzType="delete"></span>
+    </a>
+  </ng-template>
+</st>
